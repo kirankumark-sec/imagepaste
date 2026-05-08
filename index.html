@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PasteBoard — Instant Image Embeds</title>
+  <meta name="description" content="Upload or paste any image and get instant HTML, CSS, Markdown, and Base64 embed codes. No servers, no storage, 100% in-browser." />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Background grid -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="32" height="32" rx="8" stroke="currentColor" stroke-width="2"/>
+          <path d="M10 26 L16 18 L21 23 L25 17 L30 26" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+          <circle cx="13" cy="13" r="3" fill="currentColor"/>
+        </svg>
+        <span class="logo-text">PasteBoard</span>
+      </div>
+      <nav class="header-nav">
+        <span class="badge">v1.0</span>
+        <a href="https://github.com" class="gh-link" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <p class="hero-eyebrow">Zero servers. Zero storage. Zero nonsense.</p>
+      <h1 class="hero-title">
+        Drop an image,<br />
+        <span class="hero-accent">grab the embed.</span>
+      </h1>
+      <p class="hero-sub">Upload, drag, or paste any image — instantly get HTML, CSS, Markdown, and Base64 codes to use directly in your project. Everything runs in your browser.</p>
+    </div>
+  </section>
+
+  <!-- Main Upload Area -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Upload Zone -->
+      <div class="upload-section" id="uploadSection">
+        <div class="upload-zone" id="dropZone">
+          <div class="upload-zone-inner">
+            <div class="upload-icon-wrap">
+              <svg class="upload-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32 8L32 44M32 8L20 20M32 8L44 20" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8 48V56H56V48" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h2 class="upload-title">Drop your image here</h2>
+            <p class="upload-desc">or click to browse &nbsp;·&nbsp; or press <kbd>Ctrl+V</kbd> to paste</p>
+            <div class="upload-formats">
+              <span>PNG</span><span>JPG</span><span>GIF</span><span>WEBP</span><span>SVG</span><span>BMP</span>
+            </div>
+            <button class="upload-btn" id="uploadBtn">
+              Choose File
+            </button>
+            <input type="file" id="fileInput" accept="image/*" hidden />
+          </div>
+          <div class="drop-overlay" id="dropOverlay">
+            <div class="drop-overlay-inner">
+              <svg viewBox="0 0 64 64" fill="none" width="64" height="64"><path d="M32 8L32 44M32 8L20 20M32 8L44 20" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Release to upload</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Section (hidden initially) -->
+      <div class="result-section" id="resultSection" style="display:none;">
+
+        <!-- Controls bar -->
+        <div class="result-topbar">
+          <div class="result-file-info" id="fileInfo"></div>
+          <button class="btn-reset" id="resetBtn">
+            <svg viewBox="0 0 20 20" fill="none" width="16" height="16"><path d="M4 10a6 6 0 1 0 1-3.27" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 6v4h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Upload Another
+          </button>
+        </div>
+
+        <div class="result-grid">
+
+          <!-- Preview Panel -->
+          <div class="panel preview-panel">
+            <div class="panel-header">
+              <span class="panel-label">Preview</span>
+              <div class="panel-meta" id="imageDimensions">—</div>
+            </div>
+            <div class="preview-container" id="previewContainer">
+              <img id="previewImg" src="" alt="Preview" />
+            </div>
+            <div class="preview-stats" id="previewStats"></div>
+          </div>
+
+          <!-- Embed Codes Panel -->
+          <div class="codes-panel">
+
+            <!-- Tab Nav -->
+            <div class="tab-nav">
+              <button class="tab-btn active" data-tab="html">HTML</button>
+              <button class="tab-btn" data-tab="markdown">Markdown</button>
+              <button class="tab-btn" data-tab="css">CSS</button>
+              <button class="tab-btn" data-tab="base64">Base64</button>
+              <button class="tab-btn" data-tab="url">Data URL</button>
+            </div>
+
+            <!-- Tab Panels -->
+            <div class="tab-panels">
+
+              <div class="tab-panel active" id="tab-html">
+                <div class="code-block-wrap">
+                  <div class="code-label">
+                    <span>HTML Image Tag</span>
+                    <button class="copy-btn" data-target="code-html">
+                      <svg viewBox="0 0 20 20" fill="none" width="14" height="14"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M13 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" stroke="currentColor" stroke-width="1.8"/></svg>
+                      Copy
+                    </button>
+                  </div>
+                  <div class="code-block" id="code-html"></div>
+                </div>
+                <div class="code-note">Drop directly into any HTML file. No external hosting needed.</div>
+              </div>
+
+              <div class="tab-panel" id="tab-markdown">
+                <div class="code-block-wrap">
+                  <div class="code-label">
+                    <span>Markdown</span>
+                    <button class="copy-btn" data-target="code-markdown">
+                      <svg viewBox="0 0 20 20" fill="none" width="14" height="14"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M13 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" stroke="currentColor" stroke-width="1.8"/></svg>
+                      Copy
+                    </button>
+                  </div>
+                  <div class="code-block" id="code-markdown"></div>
+                </div>
+                <div class="code-note">Works in GitHub READMEs, Notion, Bear, Obsidian and any Markdown renderer.</div>
+              </div>
+
+              <div class="tab-panel" id="tab-css">
+                <div class="code-block-wrap">
+                  <div class="code-label">
+                    <span>CSS Background</span>
+                    <button class="copy-btn" data-target="code-css">
+                      <svg viewBox="0 0 20 20" fill="none" width="14" height="14"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M13 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" stroke="currentColor" stroke-width="1.8"/></svg>
+                      Copy
+                    </button>
+                  </div>
+                  <div class="code-block" id="code-css"></div>
+                </div>
+                <div class="code-note">Use as a CSS background property — no image file needed on your server.</div>
+              </div>
+
+              <div class="tab-panel" id="tab-base64">
+                <div class="code-block-wrap">
+                  <div class="code-label">
+                    <span>Base64 String</span>
+                    <button class="copy-btn" data-target="code-base64">
+                      <svg viewBox="0 0 20 20" fill="none" width="14" height="14"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M13 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" stroke="currentColor" stroke-width="1.8"/></svg>
+                      Copy
+                    </button>
+                  </div>
+                  <div class="code-block" id="code-base64"></div>
+                </div>
+                <div class="code-note">Raw Base64 string — use this in APIs, JSON payloads, or custom implementations.</div>
+              </div>
+
+              <div class="tab-panel" id="tab-url">
+                <div class="code-block-wrap">
+                  <div class="code-label">
+                    <span>Full Data URL</span>
+                    <button class="copy-btn" data-target="code-url">
+                      <svg viewBox="0 0 20 20" fill="none" width="14" height="14"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M13 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" stroke="currentColor" stroke-width="1.8"/></svg>
+                      Copy
+                    </button>
+                  </div>
+                  <div class="code-block" id="code-url"></div>
+                </div>
+                <div class="code-note">Complete <code>data:image/…;base64,…</code> URL — paste into browser address bar or any <code>src</code> attribute.</div>
+              </div>
+
+            </div><!-- /tab-panels -->
+
+            <!-- Quick actions -->
+            <div class="quick-actions">
+              <button class="action-btn" id="downloadBtn">
+                <svg viewBox="0 0 20 20" fill="none" width="15" height="15"><path d="M10 3v10M10 13l-3-3M10 13l3-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 17h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                Download Original
+              </button>
+              <button class="action-btn" id="copyUrlBtn">
+                <svg viewBox="0 0 20 20" fill="none" width="15" height="15"><path d="M8 12a4 4 0 0 0 5.66 0l2-2a4 4 0 0 0-5.66-5.66l-1 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 8a4 4 0 0 0-5.66 0l-2 2a4 4 0 0 0 5.66 5.66l1-1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                Copy Data URL
+              </button>
+            </div>
+
+          </div><!-- /codes-panel -->
+        </div><!-- /result-grid -->
+
+        <!-- History Section -->
+        <div class="history-section" id="historySection" style="display:none;">
+          <div class="history-header">
+            <span class="panel-label">Session History</span>
+            <button class="btn-clear-history" id="clearHistoryBtn">Clear</button>
+          </div>
+          <div class="history-grid" id="historyGrid"></div>
+        </div>
+
+      </div><!-- /result-section -->
+
+    </div><!-- /container -->
+  </main>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast">
+    <svg viewBox="0 0 20 20" fill="none" width="16" height="16"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span id="toastMsg">Copied!</span>
+  </div>
+
+  <!-- Feature strip -->
+  <section class="features-strip">
+    <div class="container">
+      <div class="features-row">
+        <div class="feature-item">
+          <div class="feature-icon">🔒</div>
+          <div>
+            <strong>100% Private</strong>
+            <p>Everything processed in your browser. No uploads to any server.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">⚡</div>
+          <div>
+            <strong>Instant Results</strong>
+            <p>Get your embed codes in milliseconds, ready to paste anywhere.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🌐</div>
+          <div>
+            <strong>Works Everywhere</strong>
+            <p>HTML, Markdown, CSS, APIs — one image, every format you need.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📋</div>
+          <div>
+            <strong>Paste Support</strong>
+            <p>Ctrl+V to paste directly from your clipboard — no file dialog needed.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span class="logo-text" style="font-size:1rem;">PasteBoard</span>
+        <span class="footer-credits">Built with ❤️ — runs entirely in your browser</span>
+        <span class="footer-copy">© 2025</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
